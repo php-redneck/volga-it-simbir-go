@@ -17,9 +17,9 @@ type Transport struct {
 	Model         string         `gorm:"type:varchar;size:255" json:"model"`
 	Color         string         `gorm:"type:varchar;size:255" json:"color"`
 	Identifier    string         `gorm:"type:varchar;size:255" json:"identifier"`
-	Description   null.String    `gorm:"null" json:"description"`
+	Description   null.String    `gorm:"null" json:"description" swaggertype:"string"`
 	Latitude      float32        `json:"latitude"`
 	Longitude     float32        `json:"longitude"`
-	MinutePrice   null.Float     `gorm:"null" json:"minutePrice"`
-	DayPrice      null.Float     `gorm:"null" json:"dayPrice"`
+	MinutePrice   null.Float     `gorm:"null" json:"minutePrice" swaggertype:"number"`
+	DayPrice      null.Float     `gorm:"null" json:"dayPrice" swaggertype:"number"`
 }

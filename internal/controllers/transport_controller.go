@@ -25,7 +25,7 @@ type TransportController struct {
 //	@Param			id	path	int	true	"Id транспорта"
 //	@Accept			json
 //	@Produce		json
-//	@Success		200
+//	@Success		200 {object} entities.Transport
 //	@Failure		404
 //	@Failure		500
 func (c TransportController) Show(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +103,37 @@ func (c TransportController) Edit(w http.ResponseWriter, r *http.Request) {
 //	@Tags			TransportController
 //	@Summary		Удаление транспорта по id
 //	@Description	Удаление транспорта по id
+//	@Param			id	path	int	true	"Id транспорта"
+//	@Accept			json
+//	@Produce		json
+//	@Success		204
+//	@Failure		403
+//	@Failure		404
+//	@Failure		500
 func (c TransportController) Destroy(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+
+	if err != nil {
+		responders.NotFound(w)
+		return
+	}
+
+	entity, err := c.Service.Show(id)
+
+	if err != nil {
+		responders.NotFound(w)
+		return
+	}
+
+	if entity.OwnerId != r.Context().Value("userId").(int) {
+		responders.Forbidden(w)
+	}
+
+	err = c.Service.Destroy(id)
+
+	if err != nil {
+		panic(err)
+	}
 
 	responders.NoContent(w)
 }
