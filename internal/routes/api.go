@@ -42,6 +42,16 @@ func Api(r chi.Router) {
 
 	})
 
+	r.Route("/Rent", func(r chi.Router) {
+		r.Group(func(r chi.Router) {
+			r.Use(middleware.ValidateJWT)
+
+			r.Get("/MyHistory", controllers.RentController{}.MyHistory)
+
+			r.Get("/{id}", controllers.RentController{}.Show)
+		})
+	})
+
 	r.Route("/Payment", func(r chi.Router) {
 		r.Use(middleware.ValidateJWT)
 

@@ -143,6 +143,29 @@ definitions:
     - model
     - transportType
     type: object
+  entities.Rent:
+    properties:
+      created_at:
+        type: string
+      finalPrice:
+        type: number
+      id:
+        type: integer
+      priceOfUnit:
+        type: number
+      priceType:
+        type: string
+      timeEnd:
+        type: string
+      timeStart:
+        type: string
+      transportId:
+        type: integer
+      updated_at:
+        type: string
+      userId:
+        type: integer
+    type: object
   entities.Transport:
     properties:
       canBeRented:
@@ -772,6 +795,56 @@ paths:
       summary: Добавляет на баланс аккаунта с id={accountId} 250 000 денежных единиц.
       tags:
       - PaymentController
+  /api/Rent/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Получение информации об аренде по id
+      parameters:
+      - description: Id аренды
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Rent'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение информации об аренде по id
+      tags:
+      - RentController
+  /api/Rent/MyHistory:
+    get:
+      consumes:
+      - application/json
+      description: Получение истории аренд текущего аккаунта
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Rent'
+            type: array
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение истории аренд текущего аккаунта
+      tags:
+      - RentController
   /api/Transport:
     post:
       consumes:

@@ -9,7 +9,7 @@ import (
 type TransportRepository struct{}
 
 func (r TransportRepository) Index(start, count int, transportType string) []entities.Transport {
-	var users []entities.Transport
+	var transports []entities.Transport
 
 	query := database.Instance().Offset(start).Limit(count).Order("id desc")
 
@@ -17,15 +17,15 @@ func (r TransportRepository) Index(start, count int, transportType string) []ent
 		query.Where("transport_type = ?", transportType)
 	}
 
-	query.Find(&users)
+	query.Find(&transports)
 
-	return users
+	return transports
 }
 
 func (r TransportRepository) FindBy(field string, value interface{}) (entities.Transport, error) {
-	user := entities.Transport{}
+	transport := entities.Transport{}
 
-	res := database.Instance().First(&user, fmt.Sprintf("%s = ?", field), value)
+	res := database.Instance().First(&transport, fmt.Sprintf("%s = ?", field), value)
 
-	return user, res.Error
+	return transport, res.Error
 }

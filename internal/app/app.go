@@ -25,6 +25,7 @@ func Run() {
 		entities.LogoutHistory{},
 		entities.User{},
 		entities.Transport{},
+		entities.Rent{},
 	)
 
 	if err != nil {
