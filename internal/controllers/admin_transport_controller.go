@@ -139,28 +139,28 @@ func (c AdminTransportController) Store(w http.ResponseWriter, r *http.Request) 
 //	@Failure		404
 //	@Failure		500
 func (c AdminTransportController) Edit(w http.ResponseWriter, r *http.Request) {
-	transportId, err := strconv.Atoi(chi.URLParam(r, "id"))
-
-	if err != nil {
-		responders.NotFound(w)
-		return
-	}
-
-	editTransportDTO, err := request.EditTransportRequest(r)
-
-	if err != nil {
-		responders.BadRequest(w, strings.Split(err.Error(), "\n"))
-		return
-	}
-
-	if _, err = c.Service.Edit(transportId, editTransportDTO); err != nil {
-		if string(err.Error()) == "not_found" {
-			responders.NotFound(w)
-		} else {
-			responders.BadRequest(w, strings.Split(err.Error(), "\n"))
-		}
-		return
-	}
+	//transportId, err := strconv.Atoi(chi.URLParam(r, "id"))
+	//
+	//if err != nil {
+	//	responders.NotFound(w)
+	//	return
+	//}
+	//
+	//editTransportDTO, err := request.EditTransportRequest(r)
+	//
+	//if err != nil {
+	//	responders.BadRequest(w, strings.Split(err.Error(), "\n"))
+	//	return
+	//}
+	//
+	//if _, err = c.Service.Edit(transportId, editTransportDTO); err != nil {
+	//	if string(err.Error()) == "not_found" {
+	//		responders.NotFound(w)
+	//	} else {
+	//		responders.BadRequest(w, strings.Split(err.Error(), "\n"))
+	//	}
+	//	return
+	//}
 
 	responders.NoContent(w)
 }

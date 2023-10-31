@@ -786,7 +786,15 @@ paths:
           $ref: '#/definitions/dto.TransportDTO'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Transport'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
       security:
       - BearerAuth: []
       summary: Добавление нового транспорта
@@ -794,8 +802,28 @@ paths:
       - TransportController
   /api/Transport/{id}:
     delete:
+      consumes:
+      - application/json
       description: Удаление транспорта по id
-      responses: {}
+      parameters:
+      - description: Id транспорта
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
       summary: Удаление транспорта по id
       tags:
       - TransportController
@@ -824,8 +852,29 @@ paths:
       tags:
       - TransportController
     put:
+      consumes:
+      - application/json
       description: Изменение транспорта оп id
-      responses: {}
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TransportDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
       summary: Изменение транспорта оп id
       tags:
       - TransportController
