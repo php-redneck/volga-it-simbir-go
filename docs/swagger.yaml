@@ -96,6 +96,8 @@ definitions:
     - login
     - password
     type: object
+  dto.TransportDTO:
+    type: object
   entities.User:
     properties:
       balance:
@@ -696,28 +698,57 @@ paths:
       - PaymentController
   /api/Transport:
     post:
-      description: Получение информации о транспорте по id
+      consumes:
+      - application/json
+      description: Добавление нового транспорта
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TransportDTO'
+      produces:
+      - application/json
       responses: {}
-      summary: Получение информации о транспорте по id
+      security:
+      - BearerAuth: []
+      summary: Добавление нового транспорта
       tags:
       - TransportController
   /api/Transport/{id}:
     delete:
-      description: Получение информации о транспорте по id
+      description: Удаление транспорта по id
       responses: {}
-      summary: Получение информации о транспорте по id
+      summary: Удаление транспорта по id
       tags:
       - TransportController
     get:
+      consumes:
+      - application/json
       description: Получение информации о транспорте по id
-      responses: {}
+      parameters:
+      - description: Id транспорта
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
       summary: Получение информации о транспорте по id
       tags:
       - TransportController
     put:
-      description: Получение информации о транспорте по id
+      description: Изменение транспорта оп id
       responses: {}
-      summary: Получение информации о транспорте по id
+      summary: Изменение транспорта оп id
       tags:
       - TransportController
 securityDefinitions:

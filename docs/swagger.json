@@ -885,37 +885,84 @@
         },
         "/api/Transport": {
             "post": {
-                "description": "Получение информации о транспорте по id",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Добавление нового транспорта",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "TransportController"
                 ],
-                "summary": "Получение информации о транспорте по id",
+                "summary": "Добавление нового транспорта",
+                "parameters": [
+                    {
+                        "description": "Параметры запроса",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TransportDTO"
+                        }
+                    }
+                ],
                 "responses": {}
             }
         },
         "/api/Transport/{id}": {
             "get": {
                 "description": "Получение информации о транспорте по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "tags": [
                     "TransportController"
                 ],
                 "summary": "Получение информации о транспорте по id",
-                "responses": {}
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id транспорта",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             },
             "put": {
-                "description": "Получение информации о транспорте по id",
+                "description": "Изменение транспорта оп id",
                 "tags": [
                     "TransportController"
                 ],
-                "summary": "Получение информации о транспорте по id",
+                "summary": "Изменение транспорта оп id",
                 "responses": {}
             },
             "delete": {
-                "description": "Получение информации о транспорте по id",
+                "description": "Удаление транспорта по id",
                 "tags": [
                     "TransportController"
                 ],
-                "summary": "Получение информации о транспорте по id",
+                "summary": "Удаление транспорта по id",
                 "responses": {}
             }
         }
@@ -1057,6 +1104,9 @@
                     "minLength": 1
                 }
             }
+        },
+        "dto.TransportDTO": {
+            "type": "object"
         },
         "entities.User": {
             "type": "object",
