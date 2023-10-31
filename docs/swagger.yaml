@@ -1,0 +1,728 @@
+definitions:
+  dto.AccountUpdateDTO:
+    properties:
+      password:
+        maxLength: 255
+        minLength: 1
+        type: string
+      username:
+        maxLength: 255
+        minLength: 1
+        type: string
+    type: object
+  dto.AdminTransportDTO:
+    properties:
+      canBeRented:
+        type: boolean
+      color:
+        type: string
+      dayPrice:
+        type: number
+      description:
+        type: string
+      identifier:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+      minutePrice:
+        type: number
+      model:
+        type: string
+      ownerId:
+        type: integer
+      transportType:
+        type: string
+    type: object
+  dto.CreateUserDTO:
+    properties:
+      balance:
+        type: number
+      isAdmin:
+        type: boolean
+      password:
+        maxLength: 255
+        minLength: 1
+        type: string
+      username:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  dto.EditUserDTO:
+    properties:
+      balance:
+        type: number
+      isAdmin:
+        type: boolean
+      password:
+        maxLength: 255
+        minLength: 1
+        type: string
+      username:
+        maxLength: 255
+        minLength: 1
+        type: string
+    type: object
+  dto.SignInDTO:
+    properties:
+      login:
+        maxLength: 255
+        minLength: 1
+        type: string
+      password:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  dto.SignUpDTO:
+    properties:
+      login:
+        maxLength: 255
+        minLength: 1
+        type: string
+      password:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  entities.User:
+    properties:
+      balance:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: integer
+      isAdmin:
+        type: boolean
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  responders.BadRequestResponse:
+    properties:
+      errors:
+        items:
+          type: string
+        type: array
+    type: object
+  responders.PaginationMeta:
+    properties:
+      count:
+        type: integer
+      countRecords:
+        type: integer
+      start:
+        type: integer
+      total:
+        type: integer
+    type: object
+  responders.PaginationResponse:
+    properties:
+      meta:
+        $ref: '#/definitions/responders.PaginationMeta'
+      payload:
+        items: {}
+        type: array
+    type: object
+info:
+  contact: {}
+paths:
+  /api/Account/Me:
+    get:
+      description: Получение данных о текущем аккаунте
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение данных о текущем аккаунте
+      tags:
+      - AccountController
+  /api/Account/SignIn:
+    post:
+      consumes:
+      - application/json
+      description: Авторизация пользователя
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SignInDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Токен
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responders.BadRequestResponse'
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Получение нового jwt токена пользователя
+      tags:
+      - AccountController
+  /api/Account/SignOut:
+    post:
+      description: Выход из аккаунта
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Выход из аккаунта
+      tags:
+      - AccountController
+  /api/Account/SignUp:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация пользователя
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SignUpDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Токен
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responders.BadRequestResponse'
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Регистрация нового аккаунта
+      tags:
+      - AccountController
+  /api/Account/Update:
+    put:
+      description: Обновление своего аккаунта
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AccountUpdateDTO'
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Обновление своего аккаунта
+      tags:
+      - AccountController
+  /api/Admin/Account:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка всех аккаунтов
+      parameters:
+      - description: Начало выборки
+        in: query
+        name: start
+        required: true
+        type: integer
+      - description: Размер выборки
+        in: query
+        name: count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responders.PaginationResponse'
+            - properties:
+                payload:
+                  items:
+                    $ref: '#/definitions/entities.User'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responders.BadRequestResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех аккаунтов
+      tags:
+      - AdminAccountController
+    post:
+      consumes:
+      - application/json
+      description: Создание администратором нового аккаунта
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entities.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responders.BadRequestResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Создание администратором нового аккаунта
+      tags:
+      - AdminAccountController
+  /api/Admin/Account/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление аккаунта по id
+      parameters:
+      - description: Id пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Удаление аккаунта по id
+      tags:
+      - AdminAccountController
+    get:
+      consumes:
+      - application/json
+      description: Получение информации об аккаунте по id
+      parameters:
+      - description: Id пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение информации об аккаунте по id
+      tags:
+      - AdminAccountController
+    put:
+      consumes:
+      - application/json
+      description: Изменение администратором аккаунта по id
+      parameters:
+      - description: Id пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EditUserDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responders.BadRequestResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Изменение администратором аккаунта по id
+      tags:
+      - AdminAccountController
+  /api/Admin/Rent:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка всех аккаунтов
+      produces:
+      - application/json
+      responses:
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех аккаунтов
+      tags:
+      - AdminRentController
+    post:
+      consumes:
+      - application/json
+      description: Получение списка всех аккаунтов
+      produces:
+      - application/json
+      responses:
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех аккаунтов
+      tags:
+      - AdminRentController
+  /api/Admin/Rent/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Получение списка всех аккаунтов
+      produces:
+      - application/json
+      responses:
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех аккаунтов
+      tags:
+      - AdminRentController
+    get:
+      consumes:
+      - application/json
+      description: Получение списка всех аккаунтов
+      produces:
+      - application/json
+      responses:
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех аккаунтов
+      tags:
+      - AdminRentController
+    put:
+      consumes:
+      - application/json
+      description: Получение списка всех аккаунтов
+      produces:
+      - application/json
+      responses:
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех аккаунтов
+      tags:
+      - AdminRentController
+  /api/Admin/Transport:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка всех транспортных средств
+      parameters:
+      - description: Начало выборки
+        in: query
+        name: start
+        required: true
+        type: integer
+      - description: Размер выборки
+        in: query
+        name: count
+        required: true
+        type: integer
+      - description: Тип транспорта [Car, Bike, Scooter, All]
+        in: query
+        name: transportType
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responders.BadRequestResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение списка всех транспортных средств
+      tags:
+      - AdminTransportController
+    post:
+      consumes:
+      - application/json
+      description: Создание нового транспортного средства
+      parameters:
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminTransportDTO'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responders.BadRequestResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Создание нового транспортного средства
+      tags:
+      - AdminTransportController
+  /api/Admin/Transport/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление транспорта по id
+      parameters:
+      - description: Id транспорта
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Удаление транспорта по id
+      tags:
+      - AdminTransportController
+    get:
+      consumes:
+      - application/json
+      description: Получение информации о транспортном средстве по id
+      parameters:
+      - description: Id транспорта
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Получение информации о транспортном средстве по id
+      tags:
+      - AdminTransportController
+    put:
+      consumes:
+      - application/json
+      description: Изменение транспортного средства по id
+      parameters:
+      - description: Id пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Параметры запроса
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminTransportDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responders.BadRequestResponse'
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Изменение транспортного средства по id
+      tags:
+      - AdminTransportController
+  /api/Payment/Hesoyam/{accountId}:
+    post:
+      description: Администратор может добавить баланс всем, обычный пользователь
+        только себе
+      parameters:
+      - description: ID пользователя, если отправляет не администратор, то поле игонируется
+        in: path
+        name: accountId
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Добавляет на баланс аккаунта с id={accountId} 250 000 денежных единиц.
+      tags:
+      - PaymentController
+  /api/Transport:
+    post:
+      description: Получение информации о транспорте по id
+      responses: {}
+      summary: Получение информации о транспорте по id
+      tags:
+      - TransportController
+  /api/Transport/{id}:
+    delete:
+      description: Получение информации о транспорте по id
+      responses: {}
+      summary: Получение информации о транспорте по id
+      tags:
+      - TransportController
+    get:
+      description: Получение информации о транспорте по id
+      responses: {}
+      summary: Получение информации о транспорте по id
+      tags:
+      - TransportController
+    put:
+      description: Получение информации о транспорте по id
+      responses: {}
+      summary: Получение информации о транспорте по id
+      tags:
+      - TransportController
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

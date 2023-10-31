@@ -7,17 +7,14 @@ import (
 	"strconv"
 )
 
-func PaginationAdminTransportRequest(r *http.Request) (dto.TransportPaginationDTO, error) {
+func PaginationRequest(r *http.Request) (dto.PaginationDTO, error) {
 	start, _ := strconv.Atoi(r.URL.Query().Get("start"))
 
 	count, _ := strconv.Atoi(r.URL.Query().Get("count"))
 
-	transportType := r.URL.Query().Get("transportType")
-
-	paginationDTO := dto.TransportPaginationDTO{
-		Start:         start,
-		Count:         count,
-		TransportType: transportType,
+	paginationDTO := dto.PaginationDTO{
+		Start: start,
+		Count: count,
 	}
 
 	validate := validator.New()
