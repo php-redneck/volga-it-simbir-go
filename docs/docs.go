@@ -996,6 +996,15 @@ const docTemplate = `{
         },
         "dto.AdminTransportDTO": {
             "type": "object",
+            "required": [
+                "canBeRented",
+                "color",
+                "identifier",
+                "latitude",
+                "longitude",
+                "model",
+                "transportType"
+            ],
             "properties": {
                 "canBeRented": {
                     "type": "boolean"
@@ -1028,7 +1037,12 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "transportType": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "Car",
+                        "Bike",
+                        "Scooter"
+                    ]
                 }
             }
         },
@@ -1117,7 +1131,53 @@ const docTemplate = `{
             }
         },
         "dto.TransportDTO": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "canBeRented",
+                "color",
+                "identifier",
+                "latitude",
+                "longitude",
+                "model",
+                "transportType"
+            ],
+            "properties": {
+                "canBeRented": {
+                    "type": "boolean"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "dayPrice": {
+                    "type": "number"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "identifier": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "minutePrice": {
+                    "type": "number"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "transportType": {
+                    "type": "string",
+                    "enum": [
+                        "Car",
+                        "Bike",
+                        "Scooter"
+                    ]
+                }
+            }
         },
         "entities.User": {
             "type": "object",

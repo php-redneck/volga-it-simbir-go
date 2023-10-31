@@ -33,7 +33,19 @@ definitions:
       ownerId:
         type: integer
       transportType:
+        enum:
+        - Car
+        - Bike
+        - Scooter
         type: string
+    required:
+    - canBeRented
+    - color
+    - identifier
+    - latitude
+    - longitude
+    - model
+    - transportType
     type: object
   dto.CreateUserDTO:
     properties:
@@ -97,6 +109,39 @@ definitions:
     - password
     type: object
   dto.TransportDTO:
+    properties:
+      canBeRented:
+        type: boolean
+      color:
+        type: string
+      dayPrice:
+        type: number
+      description:
+        type: string
+      identifier:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+      minutePrice:
+        type: number
+      model:
+        type: string
+      transportType:
+        enum:
+        - Car
+        - Bike
+        - Scooter
+        type: string
+    required:
+    - canBeRented
+    - color
+    - identifier
+    - latitude
+    - longitude
+    - model
+    - transportType
     type: object
   entities.User:
     properties:

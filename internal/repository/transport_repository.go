@@ -13,7 +13,7 @@ func (r TransportRepository) Index(start, count int, transportType string) []ent
 
 	query := database.Instance().Offset(start).Limit(count).Order("id desc")
 
-	if transportType != "all" {
+	if transportType != "All" {
 		query.Where("transport_type = ?", transportType)
 	}
 

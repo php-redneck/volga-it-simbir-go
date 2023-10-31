@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"github.com/charmbracelet/log"
 	"github.com/go-chi/chi/v5"
+	"github.com/php-redneck/volga-it-simbir-go/internal/dto"
 	"github.com/php-redneck/volga-it-simbir-go/internal/request"
 	"github.com/php-redneck/volga-it-simbir-go/internal/responders"
 	"github.com/php-redneck/volga-it-simbir-go/internal/services"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type TransportController struct {
@@ -56,7 +57,34 @@ func (c TransportController) Show(w http.ResponseWriter, r *http.Request) {
 //	@Produce		json
 //	@Security		BearerAuth
 func (c TransportController) Store(w http.ResponseWriter, r *http.Request) {
-	log.Info(request.CreateTransportRequest(r))
+	tdto, err := request.CreateTransportRequest(r)
+
+	if err != nil {
+		responders.BadRequest(w, strings.Split(err.Error(), "\n"))
+		return
+	}
+
+	admDto := dto.AdminTransportDTO{
+		OwnerId:       r.Context().Value("userId").(int),
+		CanBeRented:   tdto.CanBeRented,
+		TransportType: tdto.TransportType,
+		Model:         tdto.Model,
+		Color:         tdto.Color,
+		Identifier:    tdto.Identifier,
+		Description:   tdto.Description,
+		Latitude:      tdto.Latitude,
+		Longitude:     tdto.Longitude,
+		MinutePrice:   tdto.MinutePrice,
+		DayPrice:      tdto.DayPrice,
+	}
+
+	entity, err := c.Service.Store(admDto)
+
+	if err != nil {
+		panic(err)
+	}
+
+	responders.OK(w, entity)
 }
 
 // Edit
