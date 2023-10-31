@@ -19,7 +19,7 @@ func (s TransportService) Total(transportType string) int64 {
 		query     = database.Instance().Model(&transport)
 	)
 
-	if transportType != "all" {
+	if transportType != "All" {
 		query.Where("transport_type = ?", transportType)
 	}
 

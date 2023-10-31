@@ -11,6 +11,6 @@ type TransportDTO struct {
 	Description   null.String `json:"description" validate:"omitempty" swaggertype:"string"`
 	Latitude      float32     `json:"latitude" validate:"required,latitude"`
 	Longitude     float32     `json:"longitude" validate:"required,longitude"`
-	MinutePrice   null.Float  `json:"minutePrice" validate:"omitempty,number" swaggertype:"number"`
-	DayPrice      null.Float  `json:"dayPrice" validate:"omitempty,number" swaggertype:"number"`
+	MinutePrice   null.Float  `json:"minutePrice" validate:"" swaggertype:"number"`
+	DayPrice      null.Float  `json:"dayPrice" validate:"" swaggertype:"number"`
 }

@@ -7,9 +7,9 @@ import (
 	"net/http"
 )
 
-func EditTransportRequest(r *http.Request) (dto.TransportDTO, error) {
+func EditTransportRequest(r *http.Request) (dto.AdminTransportDTO, error) {
 	var (
-		editTransportDTO dto.TransportDTO
+		editTransportDTO dto.AdminTransportDTO
 		err              = json.NewDecoder(r.Body).Decode(&editTransportDTO)
 	)
 
