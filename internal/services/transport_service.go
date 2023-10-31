@@ -60,12 +60,14 @@ func (s TransportService) Store(dto dto.AdminTransportDTO) (entities.Transport, 
 	return entity, nil
 }
 
-func (s TransportService) Edit(id int, dto dto.TransportDTO) (entities.Transport, error) {
+func (s TransportService) Edit(id int, dto dto.AdminTransportDTO) (entities.Transport, error) {
 	transport, err := s.Show(id)
 
 	if err != nil {
 		return transport, errors.New("not_found")
 	}
+
+	transport.OwnerId = dto.OwnerId
 
 	transport.TransportType = dto.TransportType
 

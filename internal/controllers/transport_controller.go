@@ -56,6 +56,9 @@ func (c TransportController) Show(w http.ResponseWriter, r *http.Request) {
 //	@Accept			json
 //	@Produce		json
 //	@Security		BearerAuth
+//	@Success		200 {object} entities.Transport
+//	@Failure		404
+//	@Failure		500
 func (c TransportController) Store(w http.ResponseWriter, r *http.Request) {
 	tdto, err := request.CreateTransportRequest(r)
 
@@ -93,8 +96,62 @@ func (c TransportController) Store(w http.ResponseWriter, r *http.Request) {
 //	@Tags			TransportController
 //	@Summary		Изменение транспорта оп id
 //	@Description	Изменение транспорта оп id
+//	@Param			body	body	dto.TransportDTO	true	"Параметры запроса"
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		204
+//	@Failure		403
+//	@Failure		404
+//	@Failure		500
 func (c TransportController) Edit(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 
+	if err != nil {
+		responders.NotFound(w)
+		return
+	}
+
+	tdto, err := request.CreateTransportRequest(r)
+
+	if err != nil {
+		responders.BadRequest(w, strings.Split(err.Error(), "\n"))
+		return
+	}
+
+	entity, err := c.Service.Show(id)
+
+	if err != nil {
+		responders.NotFound(w)
+		return
+	}
+
+	if entity.OwnerId != r.Context().Value("userId").(int) {
+		responders.Forbidden(w)
+		return
+	}
+
+	admDto := dto.AdminTransportDTO{
+		OwnerId:       r.Context().Value("userId").(int),
+		CanBeRented:   tdto.CanBeRented,
+		TransportType: tdto.TransportType,
+		Model:         tdto.Model,
+		Color:         tdto.Color,
+		Identifier:    tdto.Identifier,
+		Description:   tdto.Description,
+		Latitude:      tdto.Latitude,
+		Longitude:     tdto.Longitude,
+		MinutePrice:   tdto.MinutePrice,
+		DayPrice:      tdto.DayPrice,
+	}
+
+	_, err = c.Service.Edit(id, admDto)
+
+	if err != nil {
+		panic(err)
+	}
+
+	responders.NoContent(w)
 }
 
 // Destroy
@@ -110,6 +167,7 @@ func (c TransportController) Edit(w http.ResponseWriter, r *http.Request) {
 //	@Failure		403
 //	@Failure		404
 //	@Failure		500
+//	@Security		BearerAuth
 func (c TransportController) Destroy(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 
